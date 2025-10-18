@@ -1,11 +1,12 @@
 package app;
 
 import control.Control;
+import model.*;
 
 public class Calculator {
     static void main() {
         try {
-            Control control = new Control();
+            Control<Arithmetic> control = new Control<>(new Arithmetic());
             control.connectToLocalDb();
             control.handleCommands();
         } catch (RuntimeException e) {
