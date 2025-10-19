@@ -10,7 +10,7 @@ import model.*;
 
 public class Control<E extends Model> {
     private Connection connection_ = null;
-    private E model_ = null;
+    private final E model_;
 
     public Control(E model) throws RuntimeException {
         try {
@@ -40,10 +40,10 @@ public class Control<E extends Model> {
         IO.println("\nВы успешно подключились к БД.");
     }
 
-    public void handleCommands() {
+    public void handleCommands() throws RuntimeException {
         do {
             model_.showCommands();
-            model_.runCommand(model_.readCommand());
+            model_.runCommandWithConnection(model_.readCommand(), connection_);
         } while (wantContinue());
     }
 

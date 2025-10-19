@@ -1,5 +1,7 @@
 package model;
 
+import java.sql.Connection;
+
 public class Arithmetic extends Model{
     @Override
     public String getDescribeMessage() {
@@ -22,14 +24,12 @@ public class Arithmetic extends Model{
     }
 
     @Override
-    public void runCommand(String command) {
+    public void runCommandWithConnection(String command, Connection connection)
+        throws RuntimeException
+    {
         switch (command) {
-            case "1" -> showTables();
+            case "1" -> showTables(connection);
             default -> IO.println("Невалидный номер команды.");
         }
-    }
-
-    private void showTables() {
-        IO.println("\nTables.");
     }
 }
