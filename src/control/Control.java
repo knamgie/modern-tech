@@ -34,7 +34,11 @@ public class Control<E extends Model> {
             String username = IO.readln("Имя пользователя: ");
             String password = IO.readln("Пароль: ");
 
-            tryGetConnection(dbUrl, username, password);
+            try {
+                connection_ = DriverManager.getConnection(dbUrl, username, password);
+            } catch (SQLException e) {
+                IO.println("\nОшибка входа. Попробуйте еще раз.");
+            }
         }
 
         IO.println("\nВы успешно подключились к БД.");
@@ -44,18 +48,10 @@ public class Control<E extends Model> {
         do {
             model_.showCommands();
             model_.runCommandWithConnection(model_.readCommand(), connection_);
-        } while (wantContinue());
+        } while (needContinue());
     }
 
-    private void tryGetConnection(String dbUrl, String username, String password) {
-        try {
-            connection_ = DriverManager.getConnection(dbUrl, username, password);
-        } catch (SQLException e) {
-            IO.println("\nОшибка входа. Попробуйте еще раз.");
-        }
-    }
-
-    private boolean wantContinue() {
+    private boolean needContinue() {
         while (true) {
             String answer = IO.readln("\nПродолжить? Y/n: ");
 
