@@ -16,6 +16,8 @@ public class Control<E extends Model> {
     public Control(E model) throws RuntimeException {
         try {
             System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
+            System.setErr(new PrintStream(System.err, true, StandardCharsets.UTF_8));
+
             DriverManager.registerDriver(new Driver());
         } catch (Exception e) {
             System.err.println("Невозможно зарегистрировать драйвер.");
