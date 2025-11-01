@@ -25,10 +25,9 @@ public class Arithmetic extends Model {
         IO.println("4. Вычитание чисел, результат сохранить в MySQL.");
         IO.println("5. Умножение чисел, результат сохранить в MySQL.");
         IO.println("6. Деление чисел, результат сохранить в MySQL.");
-        IO.println("7. Деление чисел по модулю, результат сохранить в MySQL.");
-        IO.println("8. Возведение числа в модуль, результат сохранить в MySQL.");
-        IO.println("9. Возведение числа в степень, результат сохранить в MySQL.");
-        IO.println("10. Сохранить все полученные данные из MySQL в Excel и вывести на экран.");
+        IO.println("7. Взятие числа по модулю, результат сохранить в MySQL.");
+        IO.println("8. Возведение числа в степень, результат сохранить в MySQL.");
+        IO.println("9. Сохранить все полученные данные из MySQL в Excel и вывести на экран.");
     }
 
     @Override
@@ -42,7 +41,9 @@ public class Arithmetic extends Model {
             case "4" -> subtractNumbers(connection);
             case "5" -> multiplyNumbers(connection);
             case "6" -> divideNumbers(connection);
-            case "10" -> saveToExcel(connection);
+            case "7" -> modNumbers(connection);
+            case "8" -> powerNumbers(connection);
+            case "9" -> saveToExcel(connection);
             default -> IO.println("Невалидный номер команды.");
         }
     }
@@ -224,9 +225,7 @@ public class Arithmetic extends Model {
 
             IO.println("\nСумма: " + lhs + " + " + rhs + " = " + result);
 
-            finishQuery(
-                connection, result, lhs + " + " + rhs + " = " + result
-            );
+            finishQuery(connection, result, lhs + " + " + rhs + " = " + result);
         } catch (NumberFormatException e) {
             IO.println("Неверный формат.");
         }
@@ -240,9 +239,7 @@ public class Arithmetic extends Model {
 
             IO.println("\nРазность: " + lhs + " - " + rhs + " = " + result);
 
-            finishQuery(
-                connection, result, lhs + " - " + rhs + " = " + result
-            );
+            finishQuery(connection, result, lhs + " - " + rhs + " = " + result);
         } catch (NumberFormatException e) {
             IO.println("Неверный формат.");
         }
@@ -256,9 +253,7 @@ public class Arithmetic extends Model {
 
             IO.println("\nУмножение: " + lhs + " * " + rhs + " = " + result);
 
-            finishQuery(
-                connection, result, lhs + " * " + rhs + " = " + result
-            );
+            finishQuery(connection, result, lhs + " * " + rhs + " = " + result);
         } catch (NumberFormatException e) {
             IO.println("Неверный формат.");
         }
@@ -272,9 +267,35 @@ public class Arithmetic extends Model {
 
             IO.println("\nЧастное: " + lhs + " / " + rhs + " = " + result);
 
-            finishQuery(
-                connection, result, lhs + " / " + rhs + " = " + result
-            );
+            finishQuery(connection, result, lhs + " / " + rhs + " = " + result);
+        } catch (NumberFormatException e) {
+            IO.println("Неверный формат.");
+        }
+    }
+
+    private void modNumbers(Connection connection) throws RuntimeException {
+        try {
+            Integer number = Integer.parseInt(IO.readln("\nВведите число: "));
+            Integer mod = Integer.parseInt(IO.readln("Введите модуль: "));
+            String result = Integer.toString(number % mod);
+
+            IO.println("\nМодуль: " + number + " % " + mod + " = " + result);
+
+            finishQuery(connection, result, number + " % " + mod + " = " + result);
+        } catch (NumberFormatException e) {
+            IO.println("Неверный формат.");
+        }
+    }
+
+    private void powerNumbers(Connection connection) throws RuntimeException {
+        try {
+            double number = Double.parseDouble(IO.readln("\nВведите число: "));
+            double power = Double.parseDouble(IO.readln("Введите степень: "));
+            String result = Double.toString(Math.pow(number, power));
+
+            IO.println("\nВозведение в степень: " + number + " ^ " + power + " = " + result);
+
+            finishQuery(connection, result, number + " ^ " + power + " = " + result);
         } catch (NumberFormatException e) {
             IO.println("Неверный формат.");
         }
