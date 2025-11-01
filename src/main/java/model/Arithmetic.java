@@ -39,6 +39,9 @@ public class Arithmetic extends Model {
             case "1" -> showTables(connection);
             case "2" -> createTable(connection);
             case "3" -> sumNumbers(connection);
+            case "4" -> subtractNumbers(connection);
+            case "5" -> multiplyNumbers(connection);
+            case "6" -> divideNumbers(connection);
             case "10" -> saveToExcel(connection);
             default -> IO.println("Невалидный номер команды.");
         }
@@ -219,22 +222,78 @@ public class Arithmetic extends Model {
             Double rhs = Double.parseDouble(IO.readln("Введите второе слагаемое: "));
             String result = Double.toString(lhs + rhs);
 
-            IO.println("\nРезультат: " + lhs + " + " + rhs + " = " + result);
+            IO.println("\nСумма: " + lhs + " + " + rhs + " = " + result);
 
             finishQuery(
-                connection, result, lhs.toString() + " + " + rhs.toString() + " = " + result
+                connection, result, lhs + " + " + rhs + " = " + result
             );
         } catch (NumberFormatException e) {
             IO.println("Неверный формат.");
         }
     }
 
+    private void subtractNumbers(Connection connection) throws RuntimeException {
+        try {
+            Double lhs = Double.parseDouble(IO.readln("\nВведите уменьшаемое: "));
+            Double rhs = Double.parseDouble(IO.readln("Введите вычитаемое: "));
+            String result = Double.toString(lhs - rhs);
+
+            IO.println("\nРазность: " + lhs + " - " + rhs + " = " + result);
+
+            finishQuery(
+                connection, result, lhs + " - " + rhs + " = " + result
+            );
+        } catch (NumberFormatException e) {
+            IO.println("Неверный формат.");
+        }
+    }
+
+    private void multiplyNumbers(Connection connection) throws RuntimeException {
+        try {
+            Double lhs = Double.parseDouble(IO.readln("\nВведите первое слагаемое: "));
+            Double rhs = Double.parseDouble(IO.readln("Введите второе слагаемое: "));
+            String result = Double.toString(lhs * rhs);
+
+            IO.println("\nУмножение: " + lhs + " * " + rhs + " = " + result);
+
+            finishQuery(
+                connection, result, lhs + " * " + rhs + " = " + result
+            );
+        } catch (NumberFormatException e) {
+            IO.println("Неверный формат.");
+        }
+    }
+
+    private void divideNumbers(Connection connection) throws RuntimeException {
+        try {
+            Double lhs = Double.parseDouble(IO.readln("\nВведите делимое: "));
+            Double rhs = Double.parseDouble(IO.readln("Введите делитель: "));
+            String result = Double.toString(lhs / rhs);
+
+            IO.println("\nЧастное: " + lhs + " / " + rhs + " = " + result);
+
+            finishQuery(
+                connection, result, lhs + " / " + rhs + " = " + result
+            );
+        } catch (NumberFormatException e) {
+            IO.println("Неверный формат.");
+        }
+    }
+
+    private void checkQueries() {
+        if (savedQueries_.isEmpty()) {
+            IO.println("\nНет данных, полученных в ходе данной сессии.");
+        } else {
+            IO.println("\nДанные, полученные в ходе текущей сессии:");
+            for (SavedQuery query : savedQueries_) {
+                query.showInfo();
+            }
+        }
+    }
+
     @Override
     protected void saveToExcel(Connection connection) {
-        IO.println("\nДанные, полученные в ходе текущей сессии:");
-        for (SavedQuery query : savedQueries_) {
-            query.showInfo();
-        }
+        checkQueries();
 
         String tableName =
             IO.readln("\nВведите название таблицы, которую вы хотите сохранить в Excel: ");
@@ -243,7 +302,7 @@ public class Arithmetic extends Model {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM " + tableName);
             Workbook workbook = new XSSFWorkbook();
-            FileOutputStream fos = new FileOutputStream("build/output.xlsx")
+            FileOutputStream fos = new FileOutputStream("build/" + tableName + ".xlsx")
         ) {
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
@@ -273,7 +332,9 @@ public class Arithmetic extends Model {
 
             System.out.println("Таблица экспортирована.");
         } catch (Exception e) {
-            System.err.println("Невозможно сохранить результат в Excel.");
+            System.err.println(
+                "Невозможно сохранить результат в Excel. Может быть такой таблицы нет."
+            );
         }
     }
 }
